@@ -5,7 +5,7 @@ A simple, handwritten Neural Network
 Install with pip:
 
 ```bash
-pip install git+git://https://github.com/matt-clarson/simple-nn.git#egg=simple-nn
+pip install git+git://github.com/matt-clarson/simple-nn.git#egg=simple-nn
 ```
 
 ## Use
