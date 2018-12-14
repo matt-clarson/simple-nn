@@ -12,6 +12,12 @@ def activate(n):
     """ ReLU activation function """
     return np.maximum(0, n)
 
+def evaluate(X, *weights, cache=False):
+    W1, b1, W2, b2 = weights
+    hidden_layer = activate(X.dot(W1) + b1)
+    output_layer = hidden_layer.dot(W2) + b2
+    return (hidden_layer, output_layer) if cache else output_layer
+
 def backpropagate(output_layer, hidden_layer, X, y, probs, W1, b1, W2, b2, reg):
     d_output = softmax.softmax_diff(output_layer, y, probs)
     

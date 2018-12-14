@@ -14,7 +14,11 @@ def train(X, y, num_classes, **params):
     W2, b2 = helpers.init_weights(hidden_size, num_classes)
 
     for i in range(iterations):
-        hidden_layer, output_layer = evaluate(X, W1, b1, W2, b2, cache=True)
+        hidden_layer, output_layer = helpers.evaluate(
+            X,
+            W1, b1, W2, b2,
+            cache=True
+        )
     
         loss, probs = softmax.softmax_loss(
             output_layer, y, reg_strength,
@@ -37,9 +41,5 @@ def train(X, y, num_classes, **params):
     
     return W1, b1, W2, b2
 
-def evaluate(X, *weights, cache=False):
-    W1, b1, W2, b2 = weights
-    hidden_layer = helpers.activate(X.dot(W1) + b1)
-    output_layer = hidden_layer.dot(W2) + b2
-    return (hidden_layer, output_layer) if cache else output_layer
-
+def classify(X, *weights):
+    return np.argmax(helpers.evaluate(X, *weights), axis=1)

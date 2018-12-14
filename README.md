@@ -54,7 +54,7 @@ W2.shape # (150, 3)
 b2.shape # (1, 3)
 ```
 
-### Evaluate
-The `evaluate` method performs forward propagation **only** against the given dataset, using supplied weights arrays.
+### Classify
+The `classify` method takes a set of trained weights and uses them to classify inputs of the same kind as the training data
 
 
