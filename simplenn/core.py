@@ -35,9 +35,10 @@ def train(X, y, num_classes, **params):
             step_size
         )
     
-    return (W1, b1), (W2, b2)
+    return W1, b1, W2, b2
 
-def evaluate(X, W1, b1, W2, b2, cache=False):
+def evaluate(X, *weights, cache=False):
+    W1, b1, W2, b2 = weights
     hidden_layer = helpers.activate(X.dot(W1) + b1)
     output_layer = hidden_layer.dot(W2) + b2
     return (hidden_layer, output_layer) if cache else output_layer
