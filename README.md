@@ -23,10 +23,10 @@ snn.evaluate(X, *weights)
 The `simplenn` package provides two methods:
 
  * `train`
- * `evaluate`
+ * `classify`
 
 ### Train
-The `train` method runs a simple, two layer neural network on a given dataset.
+The `train` method runs a simple, softmax neural network on a given dataset.
 
 #### Params
 Param | Required (y/N) | Type | Default | Use
@@ -34,10 +34,10 @@ Param | Required (y/N) | Type | Default | Use
 `X` | Yes | `numpy.ndarray` | N/A | The training data to use
 `y` | Yes | `numpy.ndarray` | N/A | The expected labels to train for
 `num_classes` | Yes | `int` | N/A | The number of unique labels in the dataset
-`hidden_size` | No | `int` | `100` | The size of the hidden layer
 `iterations` | No | `int` | `10000` | The number of iterations to train for
 `step_size` | No | `float` | `1.0` | The step size hyperparameter
 `reg_strength` | No | `float` | `1e-3` | The strength of regularisation
+`network_shape` | No | `list` | `[100]` | An list describing the shape of the neural network - see below
 
 #### Returns
 The trained weights to use for evaluation as an array.
@@ -46,13 +46,20 @@ The trained weights to use for evaluation as an array.
 X.shape # (2, 100)
 y.shape # (100,)
 
-W1, b1, W2, b2 = snn.train(X, y, 3, hidden_size=150)
+W1, b1, W2, b2 = snn.train(X, y, 3, hidden_size=[150])
 
 W1.shape # (100, 150)
-b1.shape # (1, 150)
 W2.shape # (150, 3)
-b2.shape # (1, 3)
 ```
+
+#### Network Shape
+The network shape expresses the depth and "width" of the neural network. The length of the given list is the number of hidden layers to use in the network. THe list should be a list of integers, where each integer is the size of that hidden layer. So for example:
+
+```python
+snn.train(X, y, num_classes, network_shape=[100, 50])
+```
+
+Would train a network with two hidden layers and one output layer (i.e. a 3 layer network), where the first hidden layer has the shape `(X.shape[1], 100)`, and the second layer has the shape `(100, 50)`.
 
 ### Classify
 The `classify` method takes a set of trained weights and uses them to classify inputs of the same kind as the training data
