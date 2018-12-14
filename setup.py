@@ -5,7 +5,7 @@ with open('README.md', 'r') as f:
 
 setup(
     name='simple-nn',
-    version='0.2.0',
+    version='0.2.1',
     description='A Simple, Handwritten Neural Network',
     long_description=long_description,
     license='MIT',
