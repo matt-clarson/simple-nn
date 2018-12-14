@@ -40,7 +40,13 @@ def main():
     draw_spiral(X, y)
 
     print('Training simplenn against spiral')
-    weights = simplenn.train(X, y, 3)
+    params = {
+        'step_size': 0.3,
+        'reg_strength': 1.3e-4,
+        'iterations': 10000,
+        'network_shape': [100, 50]
+    }
+    weights = simplenn.train(X, y, 3, **params)
     print('Done!')
 
     classify = lambda input: np.argmax(simplenn.evaluate(input, *weights), axis=1)
