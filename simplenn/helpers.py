@@ -1,36 +1,51 @@
 import numpy as np
+import functools
 
 import simplenn.softmax as softmax
 
-def init_weights(m, n):
-    return 0.01 * np.random.randn(m, n), np.zeros((1, n))
+def initialise_weights(network_shape):
+    return [np.random.randn(network_shape[i-1], n) * 0.001
+                for i, n in enumerate(network_shape)
+                if i != 0]
 
-def update_weights(weights, gradients, step_size):
-    return [weights[i] - step_size * gradients[i] for i in range(len(weights))]
+def populate_hidden_layers(X, weights):
+    layers = []
+    for i, W in enumerate(weights[:-1]):
+        input_layer = X if i == 0 else layers[-1][0]
+        hidden = hidden_layer(input_layer, W)
+        layers.append(hidden)
+    return layers
 
-def activate(n):
-    """ ReLU activation function """
-    return np.maximum(0, n)
+def hidden_layer(input_layer, weights):
+    output = np.maximum(0, input_layer.dot(weights))
+    def backprop(prev_diff):
+        prev_diff[output <= 0] = 0
+        d_input = prev_diff.dot(weights.T)
+        d_weights = input_layer.T.dot(prev_diff)
+        return d_input, d_weights
+    return output, backprop
 
-def evaluate(X, *weights, cache=False):
-    W1, b1, W2, b2 = weights
-    hidden_layer = activate(X.dot(W1) + b1)
-    output_layer = hidden_layer.dot(W2) + b2
-    return (hidden_layer, output_layer) if cache else output_layer
+def output_layer(input_layer, weights, expected_output):
+    output = input_layer.dot(weights)
+    data_loss, probs = softmax.softmax_loss(output, expected_output)
+    def backprop():
+        diff = softmax.softmax_diff(output, expected_output, probs)
+        d_input = diff.dot(weights.T)
+        d_weights = input_layer.T.dot(diff)
+        return d_input, d_weights
+    return data_loss, output, backprop
 
-def backpropagate(output_layer, hidden_layer, X, y, probs, W1, b1, W2, b2, reg):
-    d_output = softmax.softmax_diff(output_layer, y, probs)
-    
-    d_W2 = hidden_layer.T.dot(d_output)
-    d_b2 = np.sum(d_output, axis=0, keepdims=True)
+def regularise(weights, reg_strength):
+    L2_reg = lambda acc, x: acc + (0.5 * reg_strength * np.sum(x**2))
+    return functools.reduce(L2_reg, weights, 0)
 
-    d_hidden = d_output.dot(W2.T)
-    d_hidden[hidden_layer <= 0] = 0
+def backpropagate(layers):
+    prev_diff = None
+    d_weights = []
+    for i, layer in enumerate(reversed(layers)):
+        backprop = layer[1]
+        d_input, d_W = backprop() if i == 0 else backprop(prev_diff)
+        prev_diff = d_input
+        d_weights.append(d_W)
 
-    d_W1 = X.T.dot(d_hidden)
-    d_b1 = np.sum(d_hidden, axis=0, keepdims=True)
-
-    d_W2 += reg * W2
-    d_W1 += reg * W1
-
-    return d_W1, d_b1, d_W2, d_b2
+    return reversed(d_weights)
