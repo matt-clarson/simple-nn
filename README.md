@@ -37,7 +37,8 @@ Param | Required (y/N) | Type | Default | Use
 `iterations` | No | `int` | `10000` | The number of iterations to train for
 `step_size` | No | `float` | `1.0` | The step size hyperparameter
 `reg_strength` | No | `float` | `1e-3` | The strength of regularisation
-`network_shape` | No | `list` | `[100]` | An list describing the shape of the neural network - see below
+`network_shape` | No | `list` | `[100]` | A list describing the shape of the neural network - see below
+`batch_size` | No | `int` | `256` | The size of mini batches to take of the input data when performing gradient descent
 
 #### Returns
 The trained weights to use for evaluation as an array.
