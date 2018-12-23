@@ -3,13 +3,6 @@ import functools
 
 import simplenn.helpers as helpers
 
-def take_mini_batch_sample(inputs, expected_outputs, batch_size):
-    mini_batch_indexes = set()
-    while len(mini_batch_indexes) < batch_size:
-        mini_batch_indexes.add(np.random.randint(inputs.shape[0]))
-    selection = list(mini_batch_indexes)
-    return inputs[selection], expected_outputs[selection]
-
 def train(X, y, num_classes, **params):
     X = np.hstack((X, np.ones((X.shape[0], 1))))
 
@@ -24,7 +17,9 @@ def train(X, y, num_classes, **params):
     batch_size = params.setdefault('batch_size', 256)
     weights = helpers.initialise_weights(network_shape)
     for i in range(iterations):
-        batch_input, batch_output = take_mini_batch_sample(X, y, batch_size)
+        batch_input, batch_output = helpers.take_mini_batch_sample(
+            X, y, batch_size
+        )
         layers = helpers.populate_hidden_layers(batch_input, weights)
     
         softmax_loss, output, output_backprop = helpers.output_layer(

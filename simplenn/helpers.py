@@ -8,6 +8,13 @@ def initialise_weights(network_shape):
                 for i, n in enumerate(network_shape)
                 if i != 0]
 
+def take_mini_batch_sample(inputs, expected_outputs, batch_size):
+    mini_batch_indexes = set()
+    while len(mini_batch_indexes) < batch_size:
+        mini_batch_indexes.add(np.random.randint(inputs.shape[0]))
+    selection = list(mini_batch_indexes)
+    return inputs[selection], expected_outputs[selection]
+
 def populate_hidden_layers(X, weights):
     layers = []
     for i, W in enumerate(weights[:-1]):
