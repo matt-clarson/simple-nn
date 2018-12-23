@@ -1,11 +1,23 @@
 # simple-nn
 A simple, handwritten Neural Network
 
+#### Contents
+ * [Install](#install)
+ * [Use](#use)
+ * [Docs](#docs)
+   * [preprocess](#preprocess)
+   * [train](#train)
+     * [Params](#params)
+     * [Returns](#returns)
+     * [Network Shape](#network-shape)
+   * [classify](#classify)
+
+
 ## Install
 Install with pip:
 
 ```bash
-pip install git+git://github.com/matt-clarson/simple-nn.git#egg=simple-nn
+pip install git+git://github.com/matt-clarson/simple-nn.git
 ```
 
 ## Use
@@ -20,10 +32,16 @@ snn.evaluate(X, *weights)
 ```
 
 ## Docs
-The `simplenn` package provides two methods:
+The `simplenn` package provides three methods:
 
+ * `preprocess`
  * `train`
  * `classify`
+
+### Preprocess
+The `preprocess` method performs some simple preprocessing on datasets. It zero-centres the data, and then normalises it to the range: `-1 <= x <= 1`.
+
+While not strictly necessary, this method should be used on inputs before they are given to the `train` or `classify` methods, to minimise the numerical stability of the operations those methods employ.
 
 ### Train
 The `train` method runs a simple, softmax neural network on a given dataset.
@@ -64,5 +82,4 @@ Would train a network with two hidden layers and one output layer (i.e. a 3 laye
 
 ### Classify
 The `classify` method takes a set of trained weights and uses them to classify inputs of the same kind as the training data
-
 

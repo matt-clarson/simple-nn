@@ -3,6 +3,11 @@ import functools
 
 import simplenn.helpers as helpers
 
+def preprocess(inputs):
+    zero_centre = lambda X: X - np.mean(X)
+    normalise = lambda X: X / np.max(np.abs(X))
+    return normalise(zero_centre(inputs))
+
 def train(X, y, num_classes, **params):
     X = np.hstack((X, np.ones((X.shape[0], 1))))
 
