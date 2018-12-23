@@ -32,7 +32,6 @@ def train(X, y, num_classes, **params):
         layers.append((output, output_backprop))
     
         d_weights = helpers.backpropagate(layers)
-        d_weights = helpers.normalise_gradients(d_weights)
         weights = [weights[l] - step_size*d_W
                     for l, d_W in enumerate(d_weights)]
     return weights
