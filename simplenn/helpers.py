@@ -56,3 +56,7 @@ def backpropagate(layers):
         d_weights.append(d_W)
 
     return reversed(d_weights)
+
+def normalise_gradients(gradients):
+    return [dW / np.max(np.abs(dW)) for dW in gradients]
+
